@@ -115,7 +115,7 @@ Final model results:
 |---|---|---|---|---|---|
 | Faster R-CNN (more_proposals) | 0.2317 | 0.4577 | 0.1041 | 0.2391 | 0.2049 |
 | RetinaNet (data_anchors) | 0.1823 | 0.3479 | 0.0676 | 0.1912 | 0.1545 |
-| YOLO11n (scale015) | 0.2109 | 0.3943 | 0.1000 | — | — |
+| YOLO11n (scale015) | 0.2109 | 0.3943 | 0.1000 | 0.1643 | 0.1718 |
 
 After full training Faster R-CNN reached a mAP of 0.2317 and AP_small of 0.1041, while RetinaNet reached only 0.1823 and 0.0676 and Faster R-CNN needed about 87 ms per frame on a T4 GPU. Most errors came from small and far objects and from classes that look alike from above, such as van and car, as we expected from the data analysis.
 
