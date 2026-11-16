@@ -21,7 +21,7 @@ We loaded the data and explored the classes, the frame and box sizes, the ignore
 4. The classes are very unbalanced. Buses are under 1% of the objects and trucks about 3%
 5. Neighbouring frames are very similar, so there is no need to use every frame.
 
-Based on this, we decided to resize the images to 1280 px, take every 5th frame from each video, and paint the ignored regions grey and mark them with iscrowd = 1. We also added these augmentations:
+Based on this, we decided to resize the images to 1280 px, take every 5th frame from each video, paint the ignored regions grey and mark them with iscrowd = 1. We also added these augmentations:
 
 - only horizontal flip
 - stronger brightness, contrast and gamma changes to cover the different lighting
