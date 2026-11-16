@@ -7,6 +7,8 @@ date: 2026-11-16
 
 ## Introduction
 
+## Methodology and motivation
+
 ### Data preparation
 
 ### Validation design
