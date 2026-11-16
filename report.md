@@ -115,6 +115,8 @@ Experiment results:
 
 These experiments were trained with the reduced setup (described in validation design) and the metrics are out-of-fold over all 5 folds.
 
+In cross-validation Faster R-CNN gave the best results and RetinaNet gave the worst. The tuning helped only a little and giou_loss, focal_gamma3 and box10 made the results even worse than the baseline.
+
 **RT-DETR-L cross-validation results:**
 
 | Experiment | OOF mAP@100 | AP50@500 | AP_small@500 |
@@ -131,6 +133,8 @@ Final model results:
 | Faster R-CNN (more_proposals) | 0.2317 | 0.4577 | 0.1041 | 0.2391 | 0.2049 |
 | RetinaNet (data_anchors) | 0.1823 | 0.3479 | 0.0676 | 0.1912 | 0.1545 |
 | YOLO11n (scale015) | 0.2109 | 0.3943 | 0.1000 | — | — |
+
+After full training Faster R-CNN reached a mAP of 0.2317 and AP_small of 0.1041, while RetinaNet reached only 0.1823 and 0.0676 and Faster R-CNN needed about 87 ms per frame on a T4 GPU. Most errors came from small and far objects and from classes that look alike from above, such as van and car, as we expected from the data analysis.
 
 Faster R-CNN, RetinaNet, and YOLO11n were evaluated on Fold 0 after full training. The RT-DETR-L experiments used a different validation setup, so their validation metrics are presented separately.
 
