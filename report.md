@@ -23,9 +23,33 @@ In this homework our task was to predict bounding boxes and classes of 8 object 
 
 #### One-stage Anchor-based
 
-#### One-stage Anchor-free
+#### One-stage Anchor-free - YOLO11n
 
-#### Query-based
+We used YOLO11n as a lightweight one-stage anchor-free detector. Unlike two-stage models, YOLO predicts object classes and bounding boxes directly, without a separate region proposal stage.
+
+We selected the nano version to establish a computationally efficient baseline and investigate how training configurations affect detection performance. Experiments were conducted using five-fold cross-validation with video-level separation to avoid leakage between training and validation frames.
+
+We tested three configurations:
+
+Baseline: default training configuration.
+
+scale015: reduced scale augmentation from 0.5 to 0.15 to preserve the appearance and relative sizes of small objects.
+
+box10: increased the bounding-box loss weight to 10 to emphasize localization accuracy.
+
+The cross-validation experiments used 960px images and four training epochs. The best configuration was then trained in the full setup at 1280px for eight epochs.
+
+#### Query-based - RT-DETR-L
+
+We used RT-DETR-L, a real-time transformer-based object detector that formulates detection as a set-prediction problem. Instead of relying on predefined anchor boxes, the model uses object queries to predict classes and bounding boxes.
+
+We selected RT-DETR-L to investigate whether a query-based architecture could outperform the lightweight YOLO detector on challenging drone footage containing small and densely distributed objects.
+
+Our tuned experiment used pretrained RT-DETR-L weights, the AdamW optimizer, an initial learning rate of 0.0002, an image size of 960px, and eight training epochs per fold.
+
+We trained five models using video-level cross-validation, preserving the separation between training and validation sequences.
+
+We also tested additional fine-tuning on a larger dataset. The training set increased from 2,221 to 10,999 frames, while the same 1,019 validation images were retained. This experiment used four additional epochs and a learning rate of 0.00005.
 
 #### Our pipeline
 
