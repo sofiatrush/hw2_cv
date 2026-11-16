@@ -149,10 +149,6 @@ The ensemble achieved higher public leaderboard scores than the individual Fold 
 
 The validation mAP values refer to Fold 4, whereas the ensemble scores come from the Kaggle public leaderboard. They are not directly interchangeable.
 
-Images go into the `images/` folder:
-
-<!-- ![Training loss](images/loss.png) -->
-
 ## Final model and run instructions
 
 
