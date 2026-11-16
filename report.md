@@ -46,10 +46,10 @@ These experiments were trained with the reduced setup (described in validation d
 
 Final model results:
 
-| Model | mAP | AP50 | AP_small | Public LB |
-|---|---|---|---|---|
-| Faster R-CNN (more_proposals) | 0.2317 | 0.4577 | 0.1041 | |
-| RetinaNet (data_anchors) | 0.1823 | 0.3479 | 0.0676 | |
+| Model | mAP | AP50 | AP_small | Public LB | Private LB |
+|---|---|---|---|---|---|
+| Faster R-CNN (more_proposals) | 0.2317 | 0.4577 | 0.1041 | 0.2391 | 0.2049 |
+| RetinaNet (data_anchors) | 0.1823 | 0.3479 | 0.0676 | 0.1912 | 0.1545 |
 
 The final models were trained with the full setup on folds 1-4 and evaluated on fold 0.
 
