@@ -32,6 +32,8 @@ Based on this, we decided to resize the images to 1280 px, take every 5th frame 
 
 We combined the train and validation videos and split them into 5 folds, ensuring that all frames from one video are in the same fold. We did the validation in two steps. First, we compared different configurations of each model with 5-fold cross-validation using a reduced setup with 960 px images, every 10th frame, 4 epochs and computed one out-of-fold score from the predictions of all folds. Then we took the configuration of each model that gave the best result and trained it again with the full setup with 1280 px images, every 5th frame and 8 epochs, this time on folds 1-4 and evaluated it on fold 0.
 
+But RT-DETR-L was trained separately with its own video-level folds and longer training, so its validation scores are shown in separate tables and we compared it with the other models only on the Kaggle leaderboard.
+
 ### Models
 
 #### Two-stage Anchor-based - Faster R-CNN
@@ -183,4 +185,4 @@ Datasets and trained weights are not stored in GitHub. The notebooks use Kaggle 
 
 ## Conclusion
 
-> Summarize your findings here.
+Our data analysis showed that most objects are very small, and this was the main problem for all models. Among the models we compared under the same protocol, Faster R-CNN was the best and RetinaNet the weakest, and tuning gave only small gains. Our best result came from an ensemble of five RT-DETR-L models with Weighted Boxes Fusion, which scored 0.2898 on the public leaderboard. Since RT-DETR-L was validated on different folds, a fairer comparison would need all models trained on the same folds. RT-DETR-L was trained and tuned with a different setup, so we couldn't compare its validation scores with the other models, but we could compare all of them on the leaderboard, where it was clearly the best.
