@@ -25,10 +25,6 @@ date: 2026-11-16
 
 #### Our pipeline
 
-### Tuning strategy
-
-### Reasons for the main choices
-
 ## Results and analysis
 
 | Model    | Accuracy | F1   |
