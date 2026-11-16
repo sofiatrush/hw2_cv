@@ -56,48 +56,29 @@ Our first anchor attempt made the anchors smaller on every level, which helped s
 
 #### One-stage Anchor-free - YOLO11n
 
-We used YOLO11n as a lightweight one-stage anchor-free detector. Unlike two-stage models, YOLO predicts object classes and bounding boxes directly, without a separate region proposal stage.
+We used YOLO11n as a lightweight detector that predicts classes and boxes without a separate proposal stage. We tested three configurations:
 
-We selected the nano version to establish a computationally efficient baseline and investigate how training configurations affect detection performance. Experiments were conducted using five-fold cross-validation with video-level separation to avoid leakage between training and validation frames.
+- **baseline:** default training settings;
+- **scale015:** reduced scale augmentation from 0.5 to 0.15 to preserve small objects;
+- **box10:** increased box-loss weight to 10 to emphasize localization.
 
-We tested three configurations:
-
-- Baseline: default training configuration.
-
-- scale015: reduced scale augmentation from 0.5 to 0.15 to preserve the appearance and relative sizes of small objects.
-
-- box10: increased the bounding-box loss weight to 10 to emphasize localization accuracy.
-
-The cross-validation experiments used 960px images and four training epochs. The best configuration was then trained in the full setup at 1280px for eight epochs.
+All three were evaluated using five-fold CV. We selected `scale015` based on OOF mAP and trained it in the full setup at 1280px for 8 epochs.
 
 #### Query-based - RT-DETR-L
 
-We used RT-DETR-L, a real-time transformer-based object detector that formulates detection as a set-prediction problem. Instead of relying on predefined anchor boxes, the model uses object queries to predict classes and bounding boxes.
+RT-DETR-L uses transformer object queries and set prediction instead of predefined anchor boxes. We tested whether this architecture could improve detection in dense drone scenes.
 
-We selected RT-DETR-L to investigate whether a query-based architecture could outperform the lightweight YOLO detector on challenging drone footage containing small and densely distributed objects.
+The baseline used pretrained weights, AdamW, learning rate 0.001 and 4 epochs per fold. The tuned version used learning rate 0.0002 and 8 epochs per fold.
 
-We first trained a baseline RT-DETR-L using pretrained weights, AdamW with a learning rate of 0.001, 960px input images, and 4 epochs per fold.
-
-We then trained a tuned RT-DETR-L with a lower learning rate of 0.0002 and 8 epochs per fold. Five checkpoints were trained using video-level cross-validation.
-
-We also fine-tuned the best-performing checkpoint (Fold 4) using more training frames. The dataset increased from 2,221 to 10,999 images, while the same 1,019 validation images were retained. We trained for 4 additional epochs with a learning rate of 0.00005.
-
+We also fine-tuned the strongest checkpoint (Fold 4) on 10,999 instead of 2,221 training frames, keeping the same 1,019 validation images. This additional experiment used 4 epochs and learning rate 0.00005.
 
 #### Our pipeline
 
+Our final pipeline combines five tuned RT-DETR-L checkpoints using Weighted Boxes Fusion (WBF). Predictions were generated at 960px with confidence threshold 0.01. WBF merges overlapping same-class boxes using confidence-weighted coordinates.
 
-Our final pipeline combines five independently trained RT-DETR-L checkpoints using Weighted Boxes Fusion (WBF).
+We compared equal weights `[1,1,1,1,1]` with `[1,1,1,1,2]`, assigning additional weight to the strongest checkpoint, Fold 4. WBF used IoU threshold 0.55 and minimum score 0.02.
 
-Each model predicts bounding boxes on the test images at 960px resolution with a confidence threshold of 0.01. WBF merges overlapping predictions of the same class by averaging box coordinates using confidence-based weights.
-
-We compared two ensemble configurations:
-
-- Equal WBF: weights `[1, 1, 1, 1, 1]`.
-- Weighted WBF: weights `[1, 1, 1, 1, 2]`, giving Fold 4 additional influence because of its stronger individual validation performance.
-
-The WBF IoU threshold was 0.55, with a minimum score threshold of 0.02.
-
-Weighted WBF achieved our highest public leaderboard score of 0.28984 and was selected as the final pipeline.
+The weighted configuration achieved our best Public LB score of **0.28984**.
 
 ## Results and analysis
 
