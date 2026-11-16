@@ -74,13 +74,28 @@ We used RT-DETR-L, a real-time transformer-based object detector that formulates
 
 We selected RT-DETR-L to investigate whether a query-based architecture could outperform the lightweight YOLO detector on challenging drone footage containing small and densely distributed objects.
 
-Our tuned experiment used pretrained RT-DETR-L weights, the AdamW optimizer, an initial learning rate of 0.0002, an image size of 960px, and eight training epochs per fold.
+We first trained a baseline RT-DETR-L using pretrained weights, AdamW with a learning rate of 0.001, 960px input images, and 4 epochs per fold.
 
-We trained five models using video-level cross-validation, preserving the separation between training and validation sequences.
+We then trained a tuned RT-DETR-L with a lower learning rate of 0.0002 and 8 epochs per fold. Five checkpoints were trained using video-level cross-validation.
 
-We also tested additional fine-tuning on a larger dataset. The training set increased from 2,221 to 10,999 frames, while the same 1,019 validation images were retained. This experiment used four additional epochs and a learning rate of 0.00005.
+We also fine-tuned the best-performing checkpoint (Fold 4) using more training frames. The dataset increased from 2,221 to 10,999 images, while the same 1,019 validation images were retained. We trained for 4 additional epochs with a learning rate of 0.00005.
+
 
 #### Our pipeline
+
+
+Our final pipeline combines five independently trained RT-DETR-L checkpoints using Weighted Boxes Fusion (WBF).
+
+Each model predicts bounding boxes on the test images at 960px resolution with a confidence threshold of 0.01. WBF merges overlapping predictions of the same class by averaging box coordinates using confidence-based weights.
+
+We compared two ensemble configurations:
+
+- Equal WBF: weights `[1, 1, 1, 1, 1]`.
+- Weighted WBF: weights `[1, 1, 1, 1, 2]`, giving Fold 4 additional influence because of its stronger individual validation performance.
+
+The WBF IoU threshold was 0.55, with a minimum score threshold of 0.02.
+
+Weighted WBF achieved our highest public leaderboard score of 0.28984 and was selected as the final pipeline.
 
 ## Results and analysis
 
@@ -97,9 +112,17 @@ Experiment results:
 | YOLO11n | baseline | 0.1470 | 0.2897 | 0.0403 |
 | YOLO11n | scale015 | **0.1484** | **0.2946** | 0.0445 |
 | YOLO11n | box10 | 0.1428 | 0.2833 | **0.0455** |
-| RT-DETR-L | tuned 5-fold CV | **0.2281** | — | — |
 
 These experiments were trained with the reduced setup (described in validation design) and the metrics are out-of-fold over all 5 folds.
+
+**RT-DETR-L cross-validation results:**
+
+| Experiment | OOF mAP@100 | AP50@500 | AP_small@500 |
+|---|---:|---:|---:|
+| Baseline (4 epochs) | 0.0508 | 0.1046 | 0.0208 |
+| Tuned (8 epochs) | **0.2251** | **0.4304** | **0.0821** |
+
+The tuned RT-DETR-L achieved substantially higher OOF mAP. However, the baseline and tuned experiments differed in both training budget and validation fold composition, so this comparison does not isolate the effect of hyperparameter tuning.
 
 Final model results:
 
@@ -107,14 +130,56 @@ Final model results:
 |---|---|---|---|---|---|
 | Faster R-CNN (more_proposals) | 0.2317 | 0.4577 | 0.1041 | 0.2391 | 0.2049 |
 | RetinaNet (data_anchors) | 0.1823 | 0.3479 | 0.0676 | 0.1912 | 0.1545 |
+| YOLO11n (scale015) | 0.2109 | 0.3943 | 0.1000 | — | — |
 
-The final models were trained with the full setup on folds 1-4 and evaluated on fold 0.
+Faster R-CNN, RetinaNet, and YOLO11n were evaluated on Fold 0 after full training. The RT-DETR-L experiments used a different validation setup, so their validation metrics are presented separately.
+
+**RT-DETR-L additional experiments and Kaggle results:**
+
+| Model | Validation mAP@100 | Public LB |
+|---|---:|---:|
+| Tuned Fold 4 | 0.2864 | 0.2870 |
+| More Data Fold 4 | 0.2585 | 0.2759 |
+| Equal 5-Fold WBF | — | 0.2882 |
+| **Weighted 5-Fold WBF** | — | **0.2898** |
+
+The More Data experiment reduced validation mAP by 0.0279 compared with the original Fold 4 checkpoint, when evaluated using the same procedure. Increasing the number of training frames therefore did not improve this model.
+
+The ensemble achieved higher public leaderboard scores than the individual Fold 4 submission. Weighted WBF performed better than equal weighting and became our final selected solution.
+
+The validation mAP values refer to Fold 4, whereas the ensemble scores come from the Kaggle public leaderboard. They are not directly interchangeable.
 
 Images go into the `images/` folder:
 
 <!-- ![Training loss](images/loss.png) -->
 
 ## Final model and run instructions
+
+
+Our selected solution is the five-model RT-DETR-L Weighted Boxes Fusion ensemble.
+
+**Environment:**
+- Python, PyTorch and NVIDIA Tesla T4 GPU
+- `ultralytics==8.4.202`
+- `ensemble-boxes==1.0.9`
+- `pycocotools`, NumPy, pandas, OpenCV
+- Random seed: 42
+
+**Reproduction steps:**
+
+1. Prepare the VisDrone dataset with eight object classes and video-level folds.
+2. Run `notebooks/RT-DETR-L/rt-detr-l-tuned-5-fold-wbf-ensamble.ipynb` to train the five RT-DETR-L checkpoints.
+3. Save the `best.pt` checkpoint from each fold.
+4. Attach the competition test dataset and all five checkpoints to the WBF notebook.
+5. Run the ensemble inference notebook to generate predictions for 3,811 test images.
+6. Submit `submission.csv` to Kaggle.
+
+The final submission uses weights `[1, 1, 1, 1, 2]`.
+
+The output CSV contains `image_id` and `PredictionString`. Each prediction consists of `class confidence x y width height`, with bounding-box coordinates in original image pixels.
+
+Datasets and trained weights are not stored in GitHub. The notebooks use Kaggle Inputs and external checkpoints, so input paths must be configured when reproducing the experiments in a different environment.
+
 
 ## Conclusion
 
