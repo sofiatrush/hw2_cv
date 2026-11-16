@@ -32,11 +32,15 @@ Based on this, we decided to resize the images to 1280 px, take every 5th frame 
 
 We combined the train and validation videos and split them into 5 folds, ensuring that all frames from one video are in the same fold. We did the validation in two steps. First, we compared different configurations of each model with 5-fold cross-validation using a reduced setup with 960 px images, every 10th frame, 4 epochs and computed one out-of-fold score from the predictions of all folds. Then we took the configuration of each model that gave the best result and trained it again with the full setup with 1280 px images, every 5th frame and 8 epochs, this time on folds 1-4 and evaluated it on fold 0.
 
-## Method
-
 ### Models
 
 #### Two-stage Anchor-based 
+
+We used Faster R-CNN with a ResNet-50 backbone and a Feature Pyramid Network (FPN) from torchvision, pretrained on COCO and replaced its last layer with a new one for our 8 classes. It works in two stages, first the region proposal network suggests candidate boxes and then the second stage gives each box a class and corrects its position. We trained it with SGD, a learning rate of 0.01, warm-up and cosine decay. We tested three configurations and each of these experiments changed only one thing compared to the baseline:
+
+- baseline: the default torchvision settings;
+- more_proposals: twice as many candidate boxes were passed to the second stage, because our scenes are dense and some objects might never get a proposal;
+- giou_loss: the GIoU loss instead of Smooth L1 for box positions, because for small boxes a shift of a few pixels changes the overlap a lot.
 
 #### One-stage Anchor-based
 
