@@ -7,6 +7,8 @@ date: 2026-11-16
 
 ## Introduction
 
+In this homework our task was to predict bounding boxes and classes of 8 object types for every object in each frame of drone video clips. We had 56 training and 7 validation videos with annotations and 48 unlabelled test clips.
+
 ## Methodology and motivation
 
 ### Data preparation
