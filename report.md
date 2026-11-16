@@ -7,24 +7,19 @@ date: 2026-10-12
 
 ## Introduction
 
-Write your report here using regular **Markdown**. This text is an example — replace it.
+### Data preparation
+
+### Validation design
 
 ## Method
 
-Inline math works with single dollars: $f(x) = \sigma(Wx + b)$. Display math uses double dollars:
+### Models
 
-$$
-\mathcal{L}(\theta) = -\frac{1}{N}\sum_{i=1}^{N} y_i \log \hat{y}_i
-$$
+### Tuning strategy
 
-Code blocks are highlighted:
+### Reasons for the main choices
 
-```python
-def accuracy(y_true, y_pred):
-    return (y_true == y_pred).mean()
-```
-
-## Results
+## Results and analysis
 
 | Model    | Accuracy | F1   |
 |----------|----------|------|
@@ -34,6 +29,8 @@ def accuracy(y_true, y_pred):
 Images go into the `images/` folder:
 
 <!-- ![Training loss](images/loss.png) -->
+
+## Final model and run instructions
 
 ## Conclusion
 
