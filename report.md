@@ -146,7 +146,6 @@ Our selected solution is the five-model RT-DETR-L Weighted Boxes Fusion ensemble
 4. Save the `best.pt` checkpoint from each fold.
 5. Attach the competition test dataset and all five checkpoints to the WBF notebook.
 6. Run the ensemble inference notebook to generate predictions for 3,811 test images.
-7. Submit `submission.csv` to Kaggle.
 
 The final submission uses weights `[1, 1, 1, 1, 2]`.
 
