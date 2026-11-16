@@ -13,7 +13,7 @@ In this homework our task was to predict bounding boxes and classes of 8 object 
 
 ### Data preparation
 
-We loaded the data and explored the classes, the frame and box sizes, the ignored regions, brightness and frame overlap. So the main conclusions we got:
+We loaded the data and explored the classes, the frame and box sizes, the ignored regions, brightness, frame overlap and ran k-means on the box sizes to find typical anchor sizes. So the main conclusions we got:
 
 1. Most objects are very small. When frames are resized to 640 px, half of the objects are smaller than 16 px, at 1280 px about 10%
 2. Objects at the bottom of the frame have bigger boxes than objects at the top, because the drone films at an angle
@@ -34,7 +34,7 @@ We combined the train and validation videos and split them into 5 folds, ensurin
 
 ### Models
 
-#### Two-stage Anchor-based 
+#### Two-stage Anchor-based - Faster R-CNN
 
 We used Faster R-CNN with a ResNet-50 backbone and a Feature Pyramid Network (FPN) from torchvision, pretrained on COCO and replaced its last layer with a new one for our 8 classes. It works in two stages, first the region proposal network suggests candidate boxes and then the second stage gives each box a class and corrects its position. We trained it with SGD, a learning rate of 0.01, warm-up and cosine decay. We tested three configurations and each of these experiments changed only one thing compared to the baseline:
 
@@ -42,7 +42,15 @@ We used Faster R-CNN with a ResNet-50 backbone and a Feature Pyramid Network (FP
 - more_proposals: twice as many candidate boxes were passed to the second stage, because our scenes are dense and some objects might never get a proposal;
 - giou_loss: the GIoU loss instead of Smooth L1 for box positions, because for small boxes a shift of a few pixels changes the overlap a lot.
 
-#### One-stage Anchor-based
+#### One-stage Anchor-based - RetinaNet
+
+We used RetinaNet with the same backbone, pretrained weights and training settings as Faster R-CNN. RetinaNet has no proposal stage and classifies every anchor in the frame directly and it uses focal loss to deal with the huge number of background anchors. Since small objects and the many background anchors are the main difficulty for this model, our experiments focused on the anchors and the focal loss. We tested three configurations:
+
+- baseline: the default anchors, which start at 32 px;
+- data_anchors: we made the smallest anchors start at 13 px, based on k-means on our training boxes, because the default anchors covered only 49% of boxes under 32 px;
+- focal_gamma3: focal loss with γ = 3 instead of 2, to give even less weight to easy background anchors.
+
+Our first anchor attempt made the anchors smaller on every level, which helped small objects but hurt large ones, so in the final version we changed only the first level.
 
 #### One-stage Anchor-free - YOLO11n
 
