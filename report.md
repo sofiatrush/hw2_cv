@@ -15,6 +15,16 @@ date: 2026-10-12
 
 ### Models
 
+#### Two-stage Anchor-based 
+
+#### One-stage Anchor-based
+
+#### One-stage Anchor-free
+
+#### Query-based
+
+#### Our pipeline
+
 ### Tuning strategy
 
 ### Reasons for the main choices
