@@ -30,6 +30,8 @@ Based on this, we decided to resize the images to 1280 px, take every 5th frame 
 
 ### Validation design
 
+We combined the train and validation videos and split them into 5 folds, ensuring that all frames from one video are in the same fold. We did the validation in two steps. First, we compared different configurations of each model with 5-fold cross-validation using a reduced setup with 960 px images, every 10th frame, 4 epochs and computed one out-of-fold score from the predictions of all folds. Then we took the configuration of each model that gave the best result and trained it again with the full setup with 1280 px images, every 5th frame and 8 epochs, this time on folds 1-4 and evaluated it on fold 0.
+
 ## Method
 
 ### Models
