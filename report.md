@@ -68,7 +68,7 @@ All three were evaluated using five-fold CV. We selected `scale015` based on OOF
 
 RT-DETR-L uses transformer object queries and set prediction instead of predefined anchor boxes. We tested whether this architecture could improve detection in dense drone scenes.
 
-The baseline used pretrained weights, AdamW, learning rate 0.001 and 4 epochs per fold. The tuned version used learning rate 0.0002 and 8 epochs per fold.
+We first trained RT-DETR-L using the same reduced CV strategy as the other models: 960px images and 4 epochs. However, the baseline achieved only 0.0508 OOF mAP. We therefore tried longer training (8 epochs) and reduced the AdamW learning rate from 0.001 to 0.0002. The tuned version achieved 0.2251 OOF mAP.
 
 We also fine-tuned the strongest checkpoint (Fold 4) on 10,999 instead of 2,221 training frames, keeping the same 1,019 validation images. This additional experiment used 4 epochs and learning rate 0.00005.
 
