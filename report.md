@@ -94,8 +94,6 @@ Experiment results:
 | YOLO11n | scale015 | **0.1484** | **0.2946** | 0.0445 |
 | YOLO11n | box10 | 0.1428 | 0.2833 | **0.0455** |
 
-These experiments were trained with the reduced setup (described in validation design) and the metrics are out-of-fold over all 5 folds.
-
 In cross-validation Faster R-CNN gave the best results and RetinaNet gave the worst. The tuning helped only a little and giou_loss, focal_gamma3 and box10 made the results even worse than the baseline.
 
 **RT-DETR-L cross-validation results:**
@@ -117,8 +115,6 @@ Final model results:
 
 After full training Faster R-CNN reached a mAP of 0.2317 and AP_small of 0.1041, while RetinaNet reached only 0.1823 and 0.0676 and Faster R-CNN needed about 87 ms per frame on a T4 GPU. Most errors came from small and far objects and from classes that look alike from above, such as van and car, as we expected from the data analysis.
 
-Faster R-CNN, RetinaNet, and YOLO11n were evaluated on Fold 0 after full training. The RT-DETR-L experiments used a different validation setup, so their validation metrics are presented separately.
-
 **RT-DETR-L additional experiments and Kaggle results:**
 
 | Model | Validation mAP@100 | Public LB |
@@ -128,11 +124,7 @@ Faster R-CNN, RetinaNet, and YOLO11n were evaluated on Fold 0 after full trainin
 | Equal 5-Fold WBF | — | 0.2882 |
 | **Weighted 5-Fold WBF** | — | **0.2898** |
 
-The More Data experiment reduced validation mAP by 0.0279 compared with the original Fold 4 checkpoint, when evaluated using the same procedure. Increasing the number of training frames therefore did not improve this model.
-
-The ensemble achieved higher public leaderboard scores than the individual Fold 4 submission. Weighted WBF performed better than equal weighting and became our final selected solution.
-
-The validation mAP values refer to Fold 4, whereas the ensemble scores come from the Kaggle public leaderboard. They are not directly interchangeable.
+More Data reduced Fold 4 validation mAP by 0.0279. Weighted WBF achieved the highest Public LB (0.2898), ahead of Equal WBF (0.2882) and Fold 4 (0.2870). Validation and leaderboard scores use different evaluation sets.
 
 ## Final model and run instructions
 
