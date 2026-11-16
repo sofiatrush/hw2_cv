@@ -141,11 +141,12 @@ Our selected solution is the five-model RT-DETR-L Weighted Boxes Fusion ensemble
 **Reproduction steps:**
 
 1. Prepare the VisDrone dataset with eight object classes and video-level folds.
-2. Run `notebooks/RT-DETR-L/rt-detr-l-tuned-5-fold-wbf-ensamble.ipynb` to train the five RT-DETR-L checkpoints.
-3. Save the `best.pt` checkpoint from each fold.
-4. Attach the competition test dataset and all five checkpoints to the WBF notebook.
-5. Run the ensemble inference notebook to generate predictions for 3,811 test images.
-6. Submit `submission.csv` to Kaggle.
+2. Run `notebooks/RT-DETR-L/rt-detr-l-tuned-5-fold-cv.ipynb` to train the five RT-DETR-L checkpoints.
+3. Run `notebooks/rt-detr-l-tuned-5-fold-wbf-ensemble.ipynb` to combine their predictions using WBF and generate `submission.csv`.
+4. Save the `best.pt` checkpoint from each fold.
+5. Attach the competition test dataset and all five checkpoints to the WBF notebook.
+6. Run the ensemble inference notebook to generate predictions for 3,811 test images.
+7. Submit `submission.csv` to Kaggle.
 
 The final submission uses weights `[1, 1, 1, 1, 2]`.
 
