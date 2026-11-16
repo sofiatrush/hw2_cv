@@ -13,6 +13,21 @@ In this homework our task was to predict bounding boxes and classes of 8 object 
 
 ### Data preparation
 
+We loaded the data and explored the classes, the frame and box sizes, the ignored regions, brightness and frame overlap. So the main conclusions we got:
+
+1. Most objects are very small. When frames are resized to 640 px, half of the objects are smaller than 16 px, at 1280 px about 10%
+2. Objects at the bottom of the frame have bigger boxes than objects at the top, because the drone films at an angle
+3. The mean brightness of frames ranges from 46 to 185, so there are both dark and very bright scenes
+4. The classes are very unbalanced. Buses are under 1% of the objects and trucks about 3%
+5. Neighbouring frames are very similar, so there is no need to use every frame.
+
+Based on this, we decided to resize the images to 1280 px, take every 5th frame from each video, and paint the ignored regions grey and mark them with iscrowd = 1. We also added these augmentations:
+
+- only horizontal flip
+- stronger brightness, contrast and gamma changes to cover the different lighting
+- zoom-in with a random crop
+- copy-paste of the rare classes, where trucks and buses from other frames are pasted into the image.
+
 ### Validation design
 
 ## Method
