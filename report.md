@@ -31,11 +31,11 @@ We selected the nano version to establish a computationally efficient baseline a
 
 We tested three configurations:
 
-Baseline: default training configuration.
+- Baseline: default training configuration.
 
-scale015: reduced scale augmentation from 0.5 to 0.15 to preserve the appearance and relative sizes of small objects.
+- scale015: reduced scale augmentation from 0.5 to 0.15 to preserve the appearance and relative sizes of small objects.
 
-box10: increased the bounding-box loss weight to 10 to emphasize localization accuracy.
+- box10: increased the bounding-box loss weight to 10 to emphasize localization accuracy.
 
 The cross-validation experiments used 960px images and four training epochs. The best configuration was then trained in the full setup at 1280px for eight epochs.
 
@@ -65,6 +65,10 @@ Experiment results:
 | RetinaNet | baseline | 0.0813 | 0.1723 | 0.0154 |
 | RetinaNet | data_anchors | **0.0827** | 0.1727 | 0.0161 |
 | RetinaNet | focal_gamma3 | 0.0711 | 0.1513 | 0.0119 |
+| YOLO11n | baseline | 0.1470 | 0.2897 | 0.0403 |
+| YOLO11n | scale015 | **0.1484** | **0.2946** | 0.0445 |
+| YOLO11n | box10 | 0.1428 | 0.2833 | **0.0455** |
+| RT-DETR-L | tuned 5-fold CV | **0.2281** | — | — |
 
 These experiments were trained with the reduced setup (described in validation design) and the metrics are out-of-fold over all 5 folds.
 
