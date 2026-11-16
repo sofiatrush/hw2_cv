@@ -31,10 +31,27 @@ In this homework our task was to predict bounding boxes and classes of 8 object 
 
 ## Results and analysis
 
-| Model    | Accuracy | F1   |
-|----------|----------|------|
-| Baseline | 0.71     | 0.68 |
-| Ours     | 0.84     | 0.82 |
+Experiment results:
+
+| Model | Experiment | OOF mAP | OOF AP50 | OOF AP_small |
+|---|---|---|---|---|
+| Faster R-CNN | baseline | 0.1782 | 0.3679 | 0.0481 |
+| Faster R-CNN | more_proposals | **0.1811** | 0.3789 | 0.0513 |
+| Faster R-CNN | giou_loss | 0.1700 | 0.3580 | 0.0443 |
+| RetinaNet | baseline | 0.0813 | 0.1723 | 0.0154 |
+| RetinaNet | data_anchors | **0.0827** | 0.1727 | 0.0161 |
+| RetinaNet | focal_gamma3 | 0.0711 | 0.1513 | 0.0119 |
+
+These experiments were trained with the reduced setup (described in validation design) and the metrics are out-of-fold over all 5 folds.
+
+Final model results:
+
+| Model | mAP | AP50 | AP_small | Public LB |
+|---|---|---|---|---|
+| Faster R-CNN (more_proposals) | 0.2317 | 0.4577 | 0.1041 | |
+| RetinaNet (data_anchors) | 0.1823 | 0.3479 | 0.0676 | |
+
+The final models were trained with the full setup on folds 1-4 and evaluated on fold 0.
 
 Images go into the `images/` folder:
 
